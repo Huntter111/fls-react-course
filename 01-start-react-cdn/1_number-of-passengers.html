@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Task 1</title>
+		<!-- Підключаємо React -->
+		<script
+			crossorigin
+			src="https://unpkg.com/react@18/umd/react.development.js"
+		></script>
+		<!-- Підключаємо ReactDOM -->
+		<script
+			crossorigin
+			src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+		></script>
+		<!-- Babel для підтримки JSX у браузері -->
+		<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+		<style>
+			input {
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h2>Задача 1. Вводиться кількість пасажирів. Вивести:</h2>
+		<ul>
+			<li>скільки потрібно автобусів (кожен автобус на 20 місць)</li>
+			<li>скільки пляшок води (кожному пасажиру 2 пляшки)</li>
+			<li>скільки бутербродів (кожному пасажиру 3 бутерброди)</li>
+		</ul>
+
+		<div id="root"></div>
+
+		<script type="text/babel">
+			const valuePassengers = () => {
+				return 10
+			}
+			//
+			const NumberOfPassengers = () => {
+				const [passengers, setPassengers] = React.useState(() =>
+					valuePassengers(),
+				)
+				const busCapacity = 20
+				const bottlesPerPassenger = 2
+				const sandwichesPerPassenger = 3
+
+				const valueBusCapacity = Math.ceil(passengers / busCapacity)
+				const valueBottlesPerPassengers = passengers * bottlesPerPassenger
+				const valueSandwichesPerPassengers = passengers * sandwichesPerPassenger
+				return (
+					<React.Fragment>
+						<label>
+							Ведіть кількість пасажирів
+							<input
+								type="number"
+								value={passengers}
+								min="12"
+								onChange={(e) => setPassengers(parseInt(e.target.value))}
+							/>
+						</label>
+						<div>
+							<ul>
+								<li>{`Кількість автобусів ${valueBusCapacity} для ${passengers} пасажирів. `}</li>
+								<li>{`Кількість пляшок води ${valueBottlesPerPassengers} для ${passengers} пасажирів`}</li>
+								<li>{`Кількість бутербродів ${valueSandwichesPerPassengers} для ${passengers} пасажирів`}</li>
+							</ul>
+						</div>
+					</React.Fragment>
+				)
+			}
+
+			// Головний компонент
+			function App() {
+				return (
+					<div>
+						<NumberOfPassengers />
+					</div>
+				)
+			}
+
+			const root = ReactDOM.createRoot(document.getElementById('root'))
+			root.render(<App />)
+		</script>
+	</body>
+</html>

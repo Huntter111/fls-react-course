@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uk">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Task 3</title>
+		<!-- Підключаємо React -->
+		<script
+			crossorigin
+			src="https://unpkg.com/react@18/umd/react.development.js"
+		></script>
+		<!-- Підключаємо ReactDOM -->
+		<script
+			crossorigin
+			src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+		></script>
+		<!-- Babel для підтримки JSX у браузері -->
+		<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+		<style>
+			body {
+				font-size: 20px;
+			}
+
+			input {
+				font-style: 20px;
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h2>
+			Задача 3. Задано початок та кінець діапазону. При натисканні на кнопку
+			випадковим чином генерувати значення з вказаного діапазону та відображати
+			його.
+		</h2>
+
+		<div id="root"></div>
+
+		<script type="text/babel">
+			function getRandomNum(min, max) {
+				return (
+					parseInt(min) +
+					Math.floor(Math.random() * (parseInt(max) - parseInt(min) + 1))
+				)
+			}
+
+			const RandomTask = () => {
+				const [value, setValue] = React.useState({
+					minValue: 1,
+					maxValue: 20,
+				})
+				console.log(' RandomTask ~ value:', value)
+				const [number, setNumber] = React.useState(null)
+
+				function handlerClick(min, max) {
+					setNumber(getRandomNum(min, max))
+				}
+				return (
+					<div>
+						<label>
+							Початок діапазону:
+							<input
+								type="number"
+								value={value.minValue}
+								onChange={(e) =>
+									setValue({ ...value, minValue: e.target.value })
+								}
+							/>
+						</label>
+						<label>
+							Початок діапазону:
+							<input
+								type="number"
+								value={value.maxValue}
+								onChange={(e) =>
+									setValue({ ...value, maxValue: e.target.value })
+								}
+							/>
+						</label>
+						<div>Згенероване число: {number}</div>
+						<button
+							onClick={() => handlerClick(value.minValue, value.maxValue)}
+						>
+							Згенерувати значення
+						</button>
+					</div>
+				)
+			}
+
+			// Головний компонент
+			function App() {
+				return (
+					<div>
+						<RandomTask />
+					</div>
+				)
+			}
+
+			const root = ReactDOM.createRoot(document.getElementById('root'))
+			root.render(<App />)
+		</script>
+	</body>
+</html>

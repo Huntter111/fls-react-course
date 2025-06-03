@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="uk">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Task 4</title>
+		<!-- Підключаємо React -->
+		<script
+			crossorigin
+			src="https://unpkg.com/react@18/umd/react.development.js"
+		></script>
+		<!-- Підключаємо ReactDOM -->
+		<script
+			crossorigin
+			src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+		></script>
+		<!-- Babel для підтримки JSX у браузері -->
+		<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+		<style>
+			#root {
+				margin-top: 100px;
+			}
+			body {
+				font-size: 20px;
+			}
+
+			input {
+				font-size: 18px;
+				margin-left: 10px;
+			}
+			button {
+				margin-left: 10px;
+			}
+			.response {
+				height: 30px;
+			}
+			.error {
+				height: 30px;
+				color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h2>Задача 4. “Рахунок у банку”</h2>
+		<div>Вимоги:</div>
+		<ul>
+			<li>
+				1) Спочатку сума дорівнює 0грн. Змінити суму у гривнях можна або
+				зарахуванням на рахунок, або зняттям.
+			</li>
+			<li>
+				2) Сума автоматично переводиться у долари та євро (фіксований курс
+				задається у data).
+			</li>
+			<li>
+				3) можливість зарахувати суму (контролювати, щоб не була від’ємною)
+			</li>
+			<li>4) можливість зняти (щоб не можна зняти більше ніж є на рахунку)</li>
+			<li>
+				5) при виконанні зняття і зарахування коштів вираховувати 3% від суми
+				(відображати кількість відсотків автоматично)
+			</li>
+		</ul>
+		<ul>
+			При зміні суми :
+			<li>- якщо було зняття, то суму відображати червоним</li>
+			<li>- якщо було зарахування, то суму відображати зеленим</li>
+			<li>
+				- якщо сума валюти менша за 100 то відображати червоним кольором, інакше
+				- зеленим
+			</li>
+		</ul>
+		<div id="root"></div>
+
+		<script type="text/babel">
+			const data = {
+				tax: 0.03,
+				dollar: 42,
+				euro: 47,
+			}
+			const Bank = () => {
+				const [color, setColor] = React.useState(null)
+
+				const [score, setScore] = React.useState(0)
+				const [balance, setBalance] = React.useState({
+					deposit: 0,
+					withdraw: 0,
+				})
+
+				const [error, setError] = React.useState('')
+				const [tax, setTax] = React.useState(0)
+
+				const userDollar = score / data.dollar
+				const userEuro = score / data.euro
+
+				const handlerAddScore = (sum) => {
+					if (sum < 0 || isNaN(sum))
+						return setError('Сума для зарахування має бути додатною')
+					setScore((prevSum) => prevSum + sum - sum * data.tax)
+					setTax((prevTax) => prevTax + sum * data.tax)
+					setBalance({ ...balance, deposit: 0 })
+					setError('')
+				}
+				const handlerRemoveScore = (sum) => {
+					if (sum < 0 || isNaN(sum))
+						return setError("Сума для зняття не може бути від'ємною")
+					setScore((prevSum) => {
+						if (prevSum < sum + sum * data.tax) {
+							const maxWithdraw = prevSum / (1 + data.tax)
+
+							setError(
+								`Ви не можете зняти більше чим є у вас на рахунку. Максимальна сума яку ви можете зняти: ${maxWithdraw.toFixed(
+									1,
+								)} грн.`,
+							)
+							return prevSum
+						} else {
+							setError('')
+
+							setTax((prevTax) => prevTax + sum * data.tax)
+							setBalance({ ...balance, withdraw: 0 })
+							const valueTax = sum * data.tax
+							return prevSum - (sum + valueTax)
+						}
+					})
+				}
+
+				return (
+					<div>
+						<div>
+							Сума на рахунку{' '}
+							<span style={{ color: color ? 'green' : 'red' }}>
+								{score.toFixed(3)}
+							</span>{' '}
+							грн.
+						</div>
+						<div>
+							<label>
+								Зарахувати на рахунок
+								<input
+									type="number"
+									min={0}
+									value={balance.deposit}
+									onChange={(e) =>
+										setBalance({
+											...balance,
+											deposit: parseFloat(e.target.value),
+										})
+									}
+								/>
+							</label>
+							<button
+								onClick={() => {
+									setColor(true)
+									handlerAddScore(balance.deposit)
+								}}
+							>
+								Зарахувати
+							</button>
+						</div>
+						<div>
+							<label>
+								Зняти з рахунку
+								<input
+									type="number"
+									min={0}
+									value={balance.withdraw}
+									onChange={(e) =>
+										setBalance({
+											...balance,
+											withdraw: parseFloat(e.target.value),
+										})
+									}
+								/>
+							</label>
+							<button
+								onClick={() => {
+									setColor(false)
+									handlerRemoveScore(balance.withdraw)
+								}}
+							>
+								Зняти
+							</button>
+						</div>
+						<div>Відсоток за обслуговування {tax} грн.</div>
+						<hr />
+						<div className="error">{error}</div>
+						<div>
+							Сума у доларах:{' '}
+							<span style={{ color: userDollar > 100 ? 'green' : 'red' }}>
+								$ {userDollar.toFixed(2)}
+							</span>
+						</div>
+						<div>
+							Сума у євро:{' '}
+							<span style={{ color: userEuro > 100 ? 'green' : 'red' }}>
+								€ {userEuro.toFixed(2)}
+							</span>
+						</div>
+					</div>
+				)
+			}
+
+			// Головний компонент
+			function App() {
+				return (
+					<div>
+						<Bank />
+					</div>
+				)
+			}
+
+			const root = ReactDOM.createRoot(document.getElementById('root'))
+			root.render(<App />)
+		</script>
+	</body>
+</html>
