@@ -111,10 +111,11 @@
 					setScore((prevSum) => {
 						if (prevSum < sum + sum * data.tax) {
 							const maxWithdraw = prevSum / (1 + data.tax)
+							console.log(' setScore ~ maxWithdraw:', maxWithdraw)
 
 							setError(
 								`Ви не можете зняти більше чим є у вас на рахунку. Максимальна сума яку ви можете зняти: ${maxWithdraw.toFixed(
-									1,
+									0,
 								)} грн.`,
 							)
 							return prevSum
