@@ -72,18 +72,24 @@
 								type="number"
 								value={value.minValue}
 								onChange={(e) =>
-									setValue({ ...value, minValue: e.target.value })
+									setValue((prevValue) => ({
+										...prevValue,
+										minValue: e.target.value,
+									}))
 								}
 							/>
 						</label>
 						<label>
-							Початок діапазону:
+							Кінець діапазону:
 							<input
 								className="input"
 								type="number"
 								value={value.maxValue}
 								onChange={(e) =>
-									setValue({ ...value, maxValue: e.target.value })
+									setValue((prevValue) => ({
+										...prevValue,
+										maxValue: e.target.value,
+									}))
 								}
 							/>
 						</label>

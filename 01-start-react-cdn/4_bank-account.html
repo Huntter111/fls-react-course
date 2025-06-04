@@ -152,10 +152,10 @@
 									min={0}
 									value={balance.deposit}
 									onChange={(e) =>
-										setBalance({
-											...balance,
+										setBalance((prevBalance) => ({
+											...prevBalance,
 											deposit: parseFloat(e.target.value),
-										})
+										}))
 									}
 								/>
 							</label>
@@ -178,10 +178,10 @@
 									min={0}
 									value={balance.withdraw}
 									onChange={(e) =>
-										setBalance({
-											...balance,
+										setBalance((prevBalance) => ({
+											...prevBalance,
 											withdraw: parseFloat(e.target.value),
-										})
+										}))
 									}
 								/>
 							</label>
