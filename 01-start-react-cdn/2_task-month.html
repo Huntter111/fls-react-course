@@ -19,6 +19,10 @@
 		></script>
 		<!-- Babel для підтримки JSX у браузері -->
 		<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+		<link
+			rel="stylesheet"
+			href="./style.css"
+		/>
 		<style>
 			body {
 				font-size: 20px;
@@ -86,10 +90,11 @@
 						break
 				}
 				return (
-					<div>
+					<div className="wrapper">
 						<label>
-							Введіть номер місяця
+							Введіть номер місяця:
 							<input
+								className="input"
 								type="number"
 								min="1"
 								max="12"

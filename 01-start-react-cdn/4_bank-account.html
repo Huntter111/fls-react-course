@@ -19,25 +19,30 @@
 		></script>
 		<!-- Babel для підтримки JSX у браузері -->
 		<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+		<link
+			rel="stylesheet"
+			href="./style.css"
+		/>
 		<style>
 			#root {
 				margin-top: 100px;
 			}
-			body {
+			/* body {
 				font-size: 20px;
-			}
+			} */
 
-			input {
+			/* input {
 				font-size: 18px;
 				margin-left: 10px;
-			}
+			} */
 			button {
 				margin-left: 10px;
 			}
-			.response {
+			/* .response {
 				height: 30px;
-			}
+			} */
 			.error {
+				border-top: 1px solid black;
 				height: 30px;
 				color: red;
 			}
@@ -78,9 +83,9 @@
 
 		<script type="text/babel">
 			const data = {
-				tax: 0.03,
 				dollar: 42,
 				euro: 47,
+				tax: 0.03,
 			}
 			const Bank = () => {
 				const [color, setColor] = React.useState(null)
@@ -97,7 +102,7 @@
 				const userDollar = score / data.dollar
 				const userEuro = score / data.euro
 
-				const handlerAddScore = (sum) => {
+				const handlerDepositScore = (sum) => {
 					if (sum < 0 || isNaN(sum))
 						return setError('Сума для зарахування має бути додатною')
 					setScore((prevSum) => prevSum + sum - sum * data.tax)
@@ -105,13 +110,12 @@
 					setBalance({ ...balance, deposit: 0 })
 					setError('')
 				}
-				const handlerRemoveScore = (sum) => {
+				const handlerWithdrawScore = (sum) => {
 					if (sum < 0 || isNaN(sum))
 						return setError("Сума для зняття не може бути від'ємною")
 					setScore((prevSum) => {
 						if (prevSum < sum + sum * data.tax) {
-							const maxWithdraw = prevSum / (1 + data.tax)
-							console.log(' setScore ~ maxWithdraw:', maxWithdraw)
+							const maxWithdraw = Math.floor(prevSum / (1 + data.tax))
 
 							setError(
 								`Ви не можете зняти більше чим є у вас на рахунку. Максимальна сума яку ви можете зняти: ${maxWithdraw.toFixed(
@@ -131,18 +135,19 @@
 				}
 
 				return (
-					<div>
+					<div className="wrapper">
 						<div>
 							Сума на рахунку{' '}
 							<span style={{ color: color ? 'green' : 'red' }}>
-								{score.toFixed(3)}
+								{score.toFixed(2)}
 							</span>{' '}
 							грн.
 						</div>
 						<div>
 							<label>
-								Зарахувати на рахунок
+								Зарахувати на рахунок:
 								<input
+									className="input"
 									type="number"
 									min={0}
 									value={balance.deposit}
@@ -155,9 +160,10 @@
 								/>
 							</label>
 							<button
+								className="button"
 								onClick={() => {
 									setColor(true)
-									handlerAddScore(balance.deposit)
+									handlerDepositScore(balance.deposit)
 								}}
 							>
 								Зарахувати
@@ -165,8 +171,9 @@
 						</div>
 						<div>
 							<label>
-								Зняти з рахунку
+								Зняти з рахунку:
 								<input
+									className="input"
 									type="number"
 									min={0}
 									value={balance.withdraw}
@@ -179,16 +186,17 @@
 								/>
 							</label>
 							<button
+								className="button"
 								onClick={() => {
 									setColor(false)
-									handlerRemoveScore(balance.withdraw)
+									handlerWithdrawScore(balance.withdraw)
 								}}
 							>
 								Зняти
 							</button>
 						</div>
 						<div>Відсоток за обслуговування {tax} грн.</div>
-						<hr />
+
 						<div className="error">{error}</div>
 						<div>
 							Сума у доларах:{' '}

@@ -19,9 +19,18 @@
 		></script>
 		<!-- Babel для підтримки JSX у браузері -->
 		<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+		<!-- Підключення шрифту -->
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="./style.css"
+		/>
 		<style>
-			input {
-				margin-left: 10px;
+			span {
+				color: teal;
 			}
 		</style>
 	</head>
@@ -33,7 +42,7 @@
 			<li>скільки пляшок води (кожному пасажиру 2 пляшки)</li>
 			<li>скільки бутербродів (кожному пасажиру 3 бутерброди)</li>
 		</ul>
-
+		<hr />
 		<div id="root"></div>
 
 		<script type="text/babel">
@@ -55,8 +64,9 @@
 				return (
 					<React.Fragment>
 						<label>
-							Ведіть кількість пасажирів
+							Ведіть кількість пасажирів:
 							<input
+								className="input"
 								type="number"
 								value={passengers}
 								min="12"
